@@ -98,7 +98,7 @@ class PuzzleGame {
     } else {
       // Row of the blank counting from the bottom (1-indexed).
       final int blankRowFromBottom = size - (emptyIndex ~/ size);
-      return (inversions + blankRowFromBottom).isEven;
+      return (inversions + blankRowFromBottom).isOdd;
     }
   }
 
