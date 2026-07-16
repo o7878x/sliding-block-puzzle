@@ -19,6 +19,14 @@ class AppStrings {
   // Game screen — controls card
   // ──────────────────────────────────────────────────────────────
   static const String moveCountLabel = '步數';
+  // ──────────────────────────────────────────────────────────────
+  // Game screen — difficulty
+  // ──────────────────────────────────────────────────────────────
+  static const String difficultyLabel = '難度係數';
+  static const String difficultyEasy = '簡單';
+  static const String difficultyMedium = '普通';
+  static const String difficultyHard = '困難';
+  static const String difficultyExpert = '極難';
   static const String gridSizeLabel = '階數';
   static const String custom = '自訂';
   static const String newGame = '重新開始';

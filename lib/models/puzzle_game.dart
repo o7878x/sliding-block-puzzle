@@ -1,4 +1,5 @@
 import 'dart:math';
+import '../utils/puzzle_difficulty_calculator.dart';
 
 /// Core game logic for an N×N sliding-block puzzle.
 ///
@@ -11,17 +12,23 @@ class PuzzleGame {
   late int emptyIndex;
   int moveCount = 0;
 
+  /// Difficulty score of the current puzzle layout.
+  /// Calculated via Manhattan Distance + 2 × Linear Conflict.
+  int difficulty = 0;
+
   /// How many tiles are currently in their correct (solved) position.
   /// Updated incrementally by [move] so that [isSolved] is O(1).
   int _correctCount = 0;
 
   /// The flat tile array (0 = empty cell, 1 … N²−1 = numbered tiles).
   ///
-  /// Setting this triggers a full recount of [_correctCount].
+  /// Setting this triggers a full recount of [_correctCount] and
+  /// a recomputation of [difficulty].
   List<int> get tiles => _tiles;
   set tiles(List<int> value) {
     _tiles = value;
     _recomputeCorrectCount();
+    _recomputeDifficulty();
   }
 
   PuzzleGame(this.size) {
@@ -53,6 +60,7 @@ class PuzzleGame {
       _recomputeCorrectCount();
     } while (!_isSolvable() || isSolved());
     moveCount = 0;
+    _recomputeDifficulty();
   }
 
   /// Full scan to rebuild [_correctCount] from scratch.
@@ -64,6 +72,12 @@ class PuzzleGame {
       if (_isTileCorrect(i)) count++;
     }
     _correctCount = count;
+  }
+
+  /// Recalculates [difficulty] using Manhattan Distance + Linear Conflict.
+  void _recomputeDifficulty() {
+    difficulty = PuzzleDifficultyCalculator(size: size, tiles: _tiles)
+        .calculateDifficulty();
   }
 
   /// Whether the tile at [index] is in its solved position.

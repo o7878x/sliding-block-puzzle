@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../l10n/strings.dart';
 import '../models/puzzle_game.dart';
 import '../services/preferences_service.dart';
+import '../utils/puzzle_difficulty_calculator.dart';
 import '../widgets/puzzle_board.dart';
 
 /// Main game screen: puzzle board, move counter, grid-size selector,
@@ -192,33 +193,39 @@ class _GameScreenState extends State<GameScreen> {
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        // Status: step count & current grid size
+                        // Status: move count & difficulty
                         Container(
-                          padding: const EdgeInsets.all(12),
+                          padding: const EdgeInsets.symmetric(vertical: 16),
                           decoration: BoxDecoration(
                             color: theme.colorScheme.primaryContainer,
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Column(
                             children: [
-                              Text(AppStrings.moveCountLabel,
-                                  style: theme.textTheme.labelSmall
-                                      ?.copyWith(color: theme.colorScheme.onPrimaryContainer)),
-                              const SizedBox(height: 4),
-                              ValueListenableBuilder<int>(
-                                valueListenable: _moveCountNotifier,
-                                builder: (context, count, _) => Text(
-                                  '$count',
-                                  style: theme.textTheme.headlineMedium?.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                    color: theme.colorScheme.onPrimaryContainer,
+                              // Move count
+                              _StatusColumn(
+                                label: AppStrings.moveCountLabel,
+                                valueWidget: ValueListenableBuilder<int>(
+                                  valueListenable: _moveCountNotifier,
+                                  builder: (context, count, _) => Text(
+                                    '$count',
+                                    style: TextStyle(
+                                      fontSize: 22,
+                                      fontWeight: FontWeight.bold,
+                                      color: theme.colorScheme.onPrimaryContainer,
+                                    ),
                                   ),
                                 ),
+                                color: theme.colorScheme.onPrimaryContainer,
                               ),
-                              const SizedBox(height: 8),
-                              Text('$_gridSize×$_gridSize',
-                                  style: theme.textTheme.titleLarge
-                                      ?.copyWith(color: theme.colorScheme.onPrimaryContainer)),
+                              const SizedBox(height: 16),
+                              // Difficulty
+                              _StatusColumn(
+                                label: AppStrings.difficultyLabel,
+                                value:
+                                    '${_game.difficulty}（${PuzzleDifficultyCalculator.difficultyLevel(_game.difficulty)}）',
+                                color: theme.colorScheme.onPrimaryContainer,
+                              ),
                             ],
                           ),
                         ),
@@ -259,6 +266,46 @@ class _GameScreenState extends State<GameScreen> {
           ],
         ),
       ),
+    );
+  }
+}
+
+/// A single metric column inside the status card: [label] above, [value] below.
+class _StatusColumn extends StatelessWidget {
+  const _StatusColumn({
+    required this.label,
+    this.value,
+    this.valueWidget,
+    required this.color,
+  }) : assert(value != null || valueWidget != null,
+            'Either value or valueWidget must be provided');
+
+  final String label;
+  final String? value;
+  final Widget? valueWidget;
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(label,
+            style: TextStyle(
+              fontSize: 11,
+              color: color.withValues(alpha: 0.7),
+            )),
+        const SizedBox(height: 6),
+        valueWidget ??
+            Text(
+              value!,
+              style: TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+                color: color,
+              ),
+            ),
+      ],
     );
   }
 }
