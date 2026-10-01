@@ -43,3 +43,10 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Firebase CLI deploy cache (local, rebuilt on every deploy)
+.firebase/
+
+# Web icons, generated from assets/app_icon.png by `dart run flutter_launcher_icons`
+/web/favicon.png
+/web/icons/
