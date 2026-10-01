@@ -49,6 +49,10 @@ dev_dependencies:
   # rules and activating additional ones.
   flutter_lints: ^6.0.0
 
+  # App icon generation
+  flutter_launcher_icons: ^0.14.0
+  image: ^4.5.3
+
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
@@ -90,3 +94,11 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
+
+# App icon configuration
+flutter_launcher_icons:
+  web:
+    generate: true
+    image_path: "assets/app_icon.png"
+    background_color: "#F5F0FF"
+    theme_color: "#7C4DFF"

@@ -7,8 +7,9 @@ import 'puzzle_tile.dart';
 /// Uses a [Stack] + [AnimatedPositioned] layout so that tiles smoothly slide
 /// into their new position after every move.  Each tile widget is keyed by its
 /// number value so that Flutter knows which tile is which across rebuilds.
-/// Theme colours are resolved once and passed down, avoiding repeated
-/// O(depth) `Theme.of(context)` calls per tile.
+///
+/// An inset padding inside the clip boundary ensures tile shadows are visible.
+/// Empty cells render as subtle outline indicators for spatial awareness.
 class PuzzleBoard extends StatefulWidget {
   final PuzzleGame game;
   final void Function(int moveCount, bool isSolved) onMoved;
@@ -32,14 +33,18 @@ class _PuzzleBoardState extends State<PuzzleBoard> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final containerColor = theme.colorScheme.primaryContainer;
-    final textColor = theme.colorScheme.onPrimaryContainer;
-
-    return AspectRatio(
-      aspectRatio: 1.0,
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(8),
+    return Container(
+      decoration: BoxDecoration(
+        color: const Color(0xFF1A1A2E).withValues(alpha:0.04),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: const Color(0xFF7C4DFF).withValues(alpha:0.08),
+          width: 1,
+        ),
+      ),
+      clipBehavior: Clip.antiAlias,
+      child: AspectRatio(
+        aspectRatio: 1.0,
         child: LayoutBuilder(
           builder: (context, constraints) {
             final cellSize = constraints.maxWidth / widget.game.size;
@@ -47,6 +52,29 @@ class _PuzzleBoardState extends State<PuzzleBoard> {
 
             return Stack(
               children: [
+                // Background — empty cell indicators
+                for (int i = 0; i < widget.game.gridCount; i++)
+                  if (widget.game.tiles[i] == 0)
+                    Positioned(
+                      left: (i % widget.game.size) * cellSize,
+                      top: (i ~/ widget.game.size) * cellSize,
+                      width: cellSize,
+                      height: cellSize,
+                      child: Padding(
+                        padding: const EdgeInsets.all(4.0),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white.withValues(alpha:0.5),
+                            borderRadius: BorderRadius.circular(14),
+                            border: Border.all(
+                              color: const Color(0xFF7C4DFF).withValues(alpha:0.15),
+                              width: 1.5,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                // Actual numbered tiles
                 for (int i = 0; i < widget.game.gridCount; i++)
                   if (widget.game.tiles[i] != 0)
                     AnimatedPositioned(
@@ -60,8 +88,6 @@ class _PuzzleBoardState extends State<PuzzleBoard> {
                       child: PuzzleTile(
                         number: widget.game.tiles[i],
                         onTap: () => _handleTap(i),
-                        containerColor: containerColor,
-                        textColor: textColor,
                         fontSize: fontSize,
                       ),
                     ),

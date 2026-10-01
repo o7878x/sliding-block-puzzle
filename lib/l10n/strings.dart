@@ -19,6 +19,7 @@ class AppStrings {
   // Game screen — controls card
   // ──────────────────────────────────────────────────────────────
   static const String moveCountLabel = '步數';
+  static const String timeLabel = '時間';
   // ──────────────────────────────────────────────────────────────
   // Game screen — difficulty
   // ──────────────────────────────────────────────────────────────

@@ -15,8 +15,9 @@ class PuzzleApp extends StatelessWidget {
     return MaterialApp(
       title: AppStrings.appTitle,
       theme: ThemeData(
-        colorSchemeSeed: Colors.indigo,
+        colorSchemeSeed: const Color(0xFF7C4DFF),
         useMaterial3: true,
+        brightness: Brightness.light,
       ),
       home: const GameScreen(),
     );

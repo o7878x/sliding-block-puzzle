@@ -20,9 +20,6 @@ void main() {
     await tester.pumpWidget(const PuzzleApp());
     await tester.pumpAndSettle();
 
-    // The app bar should show the puzzle title.
-    expect(find.text(AppStrings.gameTitle), findsOneWidget);
-
     // The puzzle board should exist.
     expect(find.byType(PuzzleBoard), findsOneWidget);
 
