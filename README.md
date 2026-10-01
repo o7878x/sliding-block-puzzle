@@ -1,6 +1,41 @@
 # sliding_block_puzzle
 
-A sliding-block puzzle game built with Flutter.
+A sliding-block puzzle game built with Flutter. Supports configurable grid
+sizes, a difficulty score, a move counter and a timer, and persists the
+selected grid size across sessions.
+
+**Live demo:** <https://sliding-block-puzzle-o7878x.web.app>
+
+## Requirements
+
+- Flutter 3.44 or later (Dart SDK `^3.12.2`, see `pubspec.yaml`)
+- A web browser for `flutter run -d chrome`, or a connected device/emulator
+
+## Clone and run
+
+```bash
+git clone git@github.com:o7878x/sliding-block-puzzle.git
+cd sliding-block-puzzle
+
+flutter pub get
+flutter run -d chrome
+```
+
+## Project structure
+
+| Path | Purpose |
+|---|---|
+| `lib/main.dart` | Entry point, root `MaterialApp` and theme |
+| `lib/models/puzzle_game.dart` | Core game logic — flat tile list, shuffle, moves, win detection, solvability via inversion-count parity |
+| `lib/screens/game_screen.dart` | Game screen — responsive wide/narrow layouts, stats bar, timer |
+| `lib/widgets/puzzle_board.dart` | Grid rendering with `Stack` + `AnimatedPositioned` for slide animation |
+| `lib/widgets/puzzle_tile.dart` | Individual tile rendering |
+| `lib/services/preferences_service.dart` | Caches preferences via `shared_preferences` (localStorage on web) |
+| `lib/utils/puzzle_difficulty_calculator.dart` | Difficulty score from Manhattan distance + linear conflict |
+| `lib/l10n/strings.dart` | UI strings |
+| `test/` | Unit tests for game logic and a widget smoke test |
+| `tools/generate_icon.dart` | Generates `assets/app_icon.png` |
+| `web/` | Web runner and PWA manifest |
 
 ## Build and deploy
 
@@ -49,7 +84,6 @@ firebase serve --only hosting
 ```bash
 flutter analyze         # Static analysis
 flutter test            # Run all tests
-flutter run -d chrome   # Run on web
 ```
 
 ## Getting Started with Flutter
